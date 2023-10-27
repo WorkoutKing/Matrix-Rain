@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
   <head>
     <title>Pixel Rain</title>
@@ -64,4 +64,97 @@
       setInterval(createRaindrop, 100);
     </script>
   </body>
+</html>-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rain with Chinese Characters</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+      }
+
+      #matrix-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #0f0; /* Matrix Green */
+        font-family: "Consolas", "Courier New", monospace;
+        white-space: nowrap;
+      }
+
+      .matrix-line {
+        display: block;
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="matrix-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      // Matrix character set (Chinese characters)
+      var matrixChars = "汉字一二三四五六七八九十百千万";
+      var lineCount = Math.floor(window.innerHeight / 5); // Number of lines based on screen height
+      var lines = [];
+
+      // Initialize the matrix rain
+      function initMatrix() {
+        var matrixContainer = $("#matrix-container");
+        for (var i = 0; i < lineCount; i++) {
+          var line = $("<div>").addClass("matrix-line");
+          var x = randomX();
+          var y = -Math.random() * window.innerHeight;
+          var speed = 1 + Math.random() * 6; // Randomize the falling speed
+          lines.push({
+            element: line,
+            x: x,
+            y: y,
+            char: randomChar(),
+            speed: speed,
+          });
+          matrixContainer.append(line);
+        }
+      }
+
+      // Generate a random X position within the screen width
+      function randomX() {
+        return Math.random() * window.innerWidth;
+      }
+
+      // Generate a random character from the character set
+      function randomChar() {
+        return matrixChars[Math.floor(Math.random() * matrixChars.length)];
+      }
+
+      // Update the matrix animation
+      function updateMatrix() {
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          line.y += line.speed;
+          if (line.y > window.innerHeight) {
+            line.y = -20;
+            line.x = randomX();
+            line.char = randomChar();
+            line.speed = 1 + Math.random() * 3;
+          }
+          var opacity = Math.max(0, 1 - line.y / window.innerHeight); // Gradually fade out
+          line.element.css({
+            top: line.y + "px",
+            left: line.x + "px",
+            opacity: opacity,
+          });
+          line.element.text(line.char);
+        }
+      }
+
+      // Set up intervals to update the matrix animation
+      initMatrix();
+      setInterval(updateMatrix, 50);
+    </script>
+  </body>
 </html>
+
